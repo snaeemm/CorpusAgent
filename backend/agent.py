@@ -23,6 +23,14 @@ def get_gemini_client():
         raise ValueError("GEMINI_API_KEY is required.")
     return genai.Client(api_key=api_key)
 
+_local_embedder = None
+def get_embedder():
+    global _local_embedder
+    if _local_embedder is None:
+        from sentence_transformers import SentenceTransformer
+        _local_embedder = SentenceTransformer('all-MiniLM-L6-v2')
+    return _local_embedder
+
 # -----------------
 # TOOLS
 # -----------------
@@ -36,8 +44,7 @@ def retrieve_docs(query: str, top_k: int = 5, include_superseded: bool = False) 
         # Dense retrieval
         chroma_client = chromadb.PersistentClient(path=CHROMA_DB_DIR)
         collection = chroma_client.get_collection("meridian_policies")
-        from sentence_transformers import SentenceTransformer
-        local_embedder = SentenceTransformer('all-MiniLM-L6-v2')
+        local_embedder = get_embedder()
         q_emb = local_embedder.encode([query])[0].tolist()
         
         results = collection.query(query_embeddings=[q_emb], n_results=top_k * 3)

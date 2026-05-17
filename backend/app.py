@@ -49,6 +49,13 @@ async def chat_endpoint(req: ChatRequest):
             
         return response
     except Exception as e:
+        if "429" in str(e) or "exhausted" in str(e).lower() or "quota" in str(e).lower():
+            return AgentResponse(
+                answer="⚠️ **API Rate Limit Exceeded:** The free-tier Gemini API enforces strict requests-per-minute quotas. Please wait ~30 seconds before asking another query.",
+                citations=[],
+                confidence=0.0,
+                trace=[{"step": "Error", "text": "429 RESOURCE_EXHAUSTED Exception intercepted gracefully."}]
+            )
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/logs")
