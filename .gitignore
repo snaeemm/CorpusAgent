@@ -12,3 +12,4 @@ dist/
 .DS_Store
 chroma_db/
 *.pkl
+policy_corpus/

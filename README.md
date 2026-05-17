@@ -1,3 +1,11 @@
+---
+title: Corporate Policy Agent
+emoji: 🤖
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+pinned: false
+---
 # Meridian Consulting Agentic RAG Assistant
 
 This prototype orchestrates an agentic AI system for Meridian Consulting, specifically designed to answer complex policy questions by leveraging advanced multi-step reasoning, supersession-aware retrieval, and contradiction detection.
