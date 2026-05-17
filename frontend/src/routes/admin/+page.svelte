@@ -8,7 +8,7 @@
 
     async function fetchLogs() {
         try {
-            const res = await fetch("http://localhost:8000/api/logs");
+            const res = await fetch("/api/logs");
             if (!res.ok) throw new Error("API Error");
             logs = await res.json();
         } catch (e) {
