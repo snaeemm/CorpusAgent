@@ -37,7 +37,7 @@ This prototype orchestrates an agentic AI system for Meridian Consulting, specif
 
 ## Model Choices & Reasoning
 
-* **LLM**: configured to natively use the `GEMINI_MODEL` specified in your `.env` (e.g. `gemini-3-flash-preview` or `gemini-2.5-flash`). This allows you to evaluate across different Gemini tiers depending on local token allowances and free-tier scale.
+* **LLM**: configured to natively use the `GEMINI_MODEL` specified in your `.env` (e.g. `gemini-3.1-flash-lite-preview` or `gemini-2.5-flash`). This allows you to evaluate across different Gemini tiers depending on local token allowances and free-tier scale.
 * **Embeddings**: Local `all-MiniLM-L6-v2` (`sentence-transformers`). Relying entirely on Gemini Embeddings hits aggressive rate limits (15 RPM) during ingestion. A local embedding model provides free, robust dense vectors instantly.
 
 ## Running the Application
@@ -45,7 +45,7 @@ This prototype orchestrates an agentic AI system for Meridian Consulting, specif
 1. **Configuration**: Create a `.env` in the root directory (using `.env.example`).
    ```bash
    GEMINI_API_KEY="your_api_key"
-   GEMINI_MODEL="gemini-3-flash-preview"
+   GEMINI_MODEL="gemini-3.1-flash-lite-preview"
    ```
 2. **Setup Backend**:
    Using `uv` for lightning-fast package management.
