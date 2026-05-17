@@ -1,0 +1,14 @@
+.env
+.venv
+venv/
+__pycache__/
+logs.json
+
+# Node / Svelte
+node_modules/
+.svelte-kit/
+build/
+dist/
+.DS_Store
+chroma_db/
+*.pkl
