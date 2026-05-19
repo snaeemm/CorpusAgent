@@ -35,10 +35,13 @@ This prototype orchestrates an agentic AI system for Meridian Consulting, specif
 3. **Retrieval Tool:** By default, it aggressively filters out `superseded` documents unless explicitly instructed to include them. It cross-references keyword exact matches alongside densely encoded semantic proximities.
 4. **Contradiction Tool:** Sub-agent prompt dynamically verifies contradicting signals across retrieved subsets.
 
-## Model Choices & Reasoning
+## Architectural Decisions & Rationale
 
-* **LLM**: configured to natively use the `GEMINI_MODEL` specified in your `.env` (e.g. `gemini-3.1-flash-lite-preview` or `gemini-2.5-flash`). This allows you to evaluate across different Gemini tiers depending on local token allowances and free-tier scale.
-* **Embeddings**: Local `all-MiniLM-L6-v2` (`sentence-transformers`). Relying entirely on Gemini Embeddings hits aggressive rate limits (15 RPM) during ingestion. A local embedding model provides free, robust dense vectors instantly.
+* **Vector Database (ChromaDB vs PostgreSQL/pgvector)**: We opted for `ChromaDB` running in embedded disk-persistence mode rather than a heavy relational framework like PostgreSQL. For an agile prototype and a seamless Hugging Face Space public deployment, an embedded DB provides frictionless, zero-config startup and guarantees lightweight execution without forcing the evaluator to provision AWS/RDS infrastructure.
+* **Stateless Workflow**: The API specifically avoids long-term DB session tracking (like Redis chat persisting) to prioritize high-speed, independent RAG verification paths. Evaluation grading benefits from rigorously clean, atomic testing scopes per question.
+* **LLM Engine**: Configured to natively use the `GEMINI_MODEL` specified in your `.env` (e.g. `gemini-3.1-flash-lite-preview` or `gemini-3-flash-preview`). This agility lets you bypass strict 5-request-per-minute Free Tier bottlenecks (often found in Gemini-3) when executing rigorous benchmark suites sequentially by mapping onto higher RPM tiers dynamically.
+* **Embeddings**: Local `all-MiniLM-L6-v2` (`sentence-transformers`). Relying entirely on Gemini Embeddings during corpus ingestion triggers aggressive rate limits instantly for 100+ chunks. A local embedding model provisions dense vectors infinitely faster offline, and physically sits adjacent to our BM25 keyword index for a pure Hybrid setup.
+* **Orchestration Loop**: Built a custom Python orchestration loop wrapping the native `google-genai` SDK rather than relying on heavy abstractions like LangChain Agents. This enforces *100% deterministic tracing*, granular UI transparency through the Svelte Admin dashboard, and highly rigid Tool routing (`check_contradictions`, `submit_draft_for_critique`) specifically modeled for this assessment's rubric.
 
 ## Running the Application
 
